@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 
 import jaraya81.exception.SuscriptionException;
 import jaraya81.util.EncryptUtils;
+import jaraya81.util.GsonUtil;
 import jaraya81.util.SuscriptionUtil;
 import jaraya81.vo.Suscription;
 import jaraya81.vo.SuscriptionBox;
@@ -44,7 +45,7 @@ public class SuscriptionController {
 
 		return SuscriptionBox.builder()
 
-				.secret(EncryptUtils.eBase64(EncryptUtils.encrypt(new Gson().toJson(SuscriptionResponse.builder()
+				.secret(EncryptUtils.eBase64(EncryptUtils.encrypt(GsonUtil.to(SuscriptionResponse.builder()
 
 						.message(suscription.getMessage())
 
