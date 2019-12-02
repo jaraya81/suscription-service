@@ -7,27 +7,23 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import cl.jaraya81.enums.ErrorCode;
-import cl.jaraya81.exception.SuscriptionException;
+import cl.jaraya81.exception.SubscriptionException;
 
 public class GsonUtil {
 
-	private GsonUtil() {
-		throw new IllegalStateException("Utility class");
-	}
-
-	public static String to(Object object) throws SuscriptionException {
+	public static String to(Object object) throws SubscriptionException {
 		if (Objects.isNull(object)) {
-			throw new SuscriptionException("object cannot be null", ErrorCode.ERROR);
+			throw new SubscriptionException("object cannot be null", ErrorCode.ERROR);
 		}
 		return new GsonBuilder().setPrettyPrinting().create().toJson(object);
 	}
 
-	public static <T> T to(String json, Class<T> clazz) throws SuscriptionException {
+	public static <T> T to(String json, Class<T> clazz) throws SubscriptionException {
 		if (Strings.isNullOrEmpty(json)) {
-			throw new SuscriptionException("JSON cannot be null or empty", ErrorCode.ERROR);
+			throw new SubscriptionException("JSON cannot be null or empty", ErrorCode.ERROR);
 		}
 		if (Objects.isNull(clazz)) {
-			throw new SuscriptionException("Class required", ErrorCode.ERROR);
+			throw new SubscriptionException("Class required", ErrorCode.ERROR);
 		}
 		return new Gson().fromJson(json, clazz);
 	}

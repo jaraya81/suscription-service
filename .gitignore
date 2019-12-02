@@ -1,6 +1,8 @@
 .classpath
 .project
-.settings/
 .springBeans
+suscription-service.iml
+.idea/
+.settings/
 log/
 target/

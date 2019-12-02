@@ -13,24 +13,20 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
-import cl.jaraya81.exception.SuscriptionException;
+import cl.jaraya81.exception.SubscriptionException;
 
 public class EncryptUtils {
 
 	private static final String SHA_1 = "SHA-1";
 	private static final String AES = "AES";
-	private static final String AES_ECB_PKCS5PADDING = "AES/ECB/PKCS5Padding";
+	private static final String AES_ECB_PKCS5_PADDING = "AES/ECB/PKCS5Padding";
 
 	private static SecretKeySpec secretKey;
 
-	private EncryptUtils() {
-		throw new IllegalStateException("Utility class");
-	}
-
-	private static void setKey(String myKey) throws SuscriptionException {
+	private static void setKey(String myKey) throws SubscriptionException {
 		byte[] key;
 
-		MessageDigest sha = null;
+		MessageDigest sha;
 		try {
 			key = myKey.getBytes(StandardCharsets.UTF_8);
 			sha = MessageDigest.getInstance(SHA_1);
@@ -39,33 +35,33 @@ public class EncryptUtils {
 			secretKey = new SecretKeySpec(key, AES);
 
 		} catch (NoSuchAlgorithmException e) {
-			throw new SuscriptionException(e);
+			throw new SubscriptionException(e);
 		}
 	}
 
-	public static String encrypt(String strToEncrypt, String secret) throws SuscriptionException {
+	public static String encrypt(String strToEncrypt, String secret) throws SubscriptionException {
 		setKey(secret);
 		Cipher cipher;
 		try {
-			cipher = Cipher.getInstance(AES_ECB_PKCS5PADDING);
+			cipher = Cipher.getInstance(AES_ECB_PKCS5_PADDING);
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 			return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes(StandardCharsets.UTF_8)));
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException
 				| BadPaddingException e) {
-			throw new SuscriptionException(e);
+			throw new SubscriptionException(e);
 		}
 	}
 
-	public static String decrypt(String strToDecrypt, String secret) throws SuscriptionException {
+	public static String decrypt(String strToDecrypt, String secret) throws SubscriptionException {
 		setKey(secret);
 		Cipher cipher;
 		try {
-			cipher = Cipher.getInstance(AES_ECB_PKCS5PADDING);
+			cipher = Cipher.getInstance(AES_ECB_PKCS5_PADDING);
 			cipher.init(Cipher.DECRYPT_MODE, secretKey);
 			return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)), StandardCharsets.UTF_8);
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException
 				| BadPaddingException e) {
-			throw new SuscriptionException(e);
+			throw new SubscriptionException(e);
 		}
 	}
 

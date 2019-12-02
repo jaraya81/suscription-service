@@ -11,48 +11,48 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 
-import cl.jaraya81.exception.SuscriptionException;
+import cl.jaraya81.exception.SubscriptionException;
 import cl.jaraya81.util.EncryptUtils;
 import cl.jaraya81.util.GsonUtil;
 import cl.jaraya81.util.SuscriptionUtil;
-import cl.jaraya81.vo.Suscription;
-import cl.jaraya81.vo.SuscriptionBox;
-import cl.jaraya81.vo.SuscriptionRequest;
-import cl.jaraya81.vo.SuscriptionResponse;
+import cl.jaraya81.vo.Subscription;
+import cl.jaraya81.vo.SubscriptionBox;
+import cl.jaraya81.vo.SubscriptionRequest;
+import cl.jaraya81.vo.SubscriptionResponse;
 
 @RestController
-@RequestMapping(path = "/suscription")
-public class SuscriptionController {
+@RequestMapping(path = "/subscription")
+class SubscriptionController {
 
 	private static final String SECRET = "Lhm9Uzm3";
 
-	@Value(value = "${path.suscriptions:suscriptions}")
-	private String pathSuscriptions;
+	@Value(value = "${path.subscriptions:subscriptions}")
+	private String pathSubscriptions;
 
 	@PostMapping("/get")
 	@ResponseBody
-	public SuscriptionBox getSuscription(@RequestBody SuscriptionBox request) throws SuscriptionException {
+	public SubscriptionBox getSubscription(@RequestBody SubscriptionBox request) throws SubscriptionException {
 		if (Objects.isNull(request)) {
 			return null;
 		}
 
-		SuscriptionRequest susc = new Gson().fromJson(
-				EncryptUtils.decrypt(EncryptUtils.dBase64(request.getSecret()), SECRET), SuscriptionRequest.class);
-		Suscription suscription = SuscriptionUtil.get(pathSuscriptions, susc.getUser());
+		SubscriptionRequest susc = new Gson().fromJson(
+				EncryptUtils.decrypt(EncryptUtils.dBase64(request.getSecret()), SECRET), SubscriptionRequest.class);
+		Subscription subscription = SuscriptionUtil.get(pathSubscriptions, susc.getUser());
 
-		return SuscriptionBox.builder()
+		return SubscriptionBox.builder()
 
-				.secret(EncryptUtils.eBase64(EncryptUtils.encrypt(GsonUtil.to(SuscriptionResponse.builder()
+				.secret(EncryptUtils.eBase64(EncryptUtils.encrypt(GsonUtil.to(SubscriptionResponse.builder()
 
-						.message(suscription.getMessage())
+						.message(subscription.getMessage())
 
-						.secret(suscription.getSecret())
+						.secret(subscription.getSecret())
 
-						.user(suscription.getUser())
+						.user(subscription.getUser())
 
-						.expiration(suscription.getExpiration())
+						.expiration(subscription.getExpiration())
 
-						.valid(suscription.getValid())
+						.valid(subscription.getValid())
 
 						.build()), SECRET)))
 
